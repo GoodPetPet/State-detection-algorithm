@@ -1,0 +1,71 @@
+from ultralytics import YOLO
+import cv2
+# 加载模型（从头训练或微调）
+model = YOLO("/home/anxixu/Model/best.pt")  # 从头训练
+# model = YOLO("yolov8n.pt")  # 微调预训练模型
+
+# # 启动训练
+# results = model.train(
+#     data="/home/anxixu/Data/cat02/data.yaml",  # 数据集配置文件路径
+#     epochs=50,                # 训练轮次
+#     batch=4,                  # 批量大小
+#     imgsz=640,                 # 输入图像尺寸
+#     device="0",                # 使用 GPU（"0" 表示第一块 GPU，CPU 用 "cpu"）
+#     name="cat_behavior_v1",    # 训练结果保存目录名称
+#     pretrained=True,           # 使用预训练权重
+#     optimizer="Adam",          # 优化器
+#     lr0=0.001,                 # 初始学习率
+#     cos_lr=True,               # 使用余弦学习率调度
+#     augment=True,              # 启用数据增强
+# )
+results = model.predict(
+    source="/home/anxixu/222.mp4",  # 输入图片路径
+    conf=0.25,                      # 置信度阈值
+    save=True,                      # 保存检测结果
+    show=True,                      # 显示检测结果（窗口弹出）
+    save_txt=True,                  # 保存检测框信息到 txt 文件
+    save_conf=True,                 # 保存置信度到 txt 文件
+)
+# # 处理检测结果
+# for result in results:
+#     # 获取检测框信息
+#     boxes = result.boxes  # 检测框对象
+#     print("检测到的目标数量:", len(boxes))
+
+#     # # 遍历每个检测框
+#     # for box in boxes:
+#     #     # 获取检测框坐标（左上角 x, y，右下角 x, y）
+#     #     x1, y1, x2, y2 = box.xyxy[0].tolist()
+#     #     print(f"检测框坐标: ({x1}, {y1}, {x2}, {y2})")
+
+#     #     # 获取类别 ID 和名称
+#     #     class_id = int(box.cls)
+#     #     class_name = model.names[class_id]
+#     #     print(f"类别: {class_name} (ID: {class_id})")
+
+#     #     # 获取置信度
+#     #     confidence = float(box.conf)
+#     #     print(f"置信度: {confidence:.2f}")
+
+#     # # 获取带检测框的图片（OpenCV 格式）
+#     # annotated_image = result.plot()  # 绘制检测框和标签
+
+#     # # 显示图片（使用 OpenCV）
+#     # cv2.imshow("YOLOv8 Detection", annotated_image)
+#     # cv2.waitKey(0)  # 等待按键关闭窗口
+#     # cv2.destroyAllWindows()
+
+#     # # 保存带检测框的图片
+#     # output_image_path = "/home/anxixu/val_detected.jpg"
+#     # cv2.imwrite(output_image_path, annotated_image)
+#     # print(f"检测结果已保存到: {output_image_path}")
+
+#     # # 保存检测框信息到文件
+#     # output_txt_path = "/home/anxixu/val_detected.txt"
+#     # with open(output_txt_path, "w") as f:
+#     #     for box in boxes:
+#     #         x1, y1, x2, y2 = box.xyxy[0].tolist()
+#     #         class_id = int(box.cls)
+#     #         confidence = float(box.conf)
+#     #         f.write(f"{class_id} {x1} {y1} {x2} {y2} {confidence}\n")
+#     # print(f"检测框信息已保存到: {output_txt_path}")

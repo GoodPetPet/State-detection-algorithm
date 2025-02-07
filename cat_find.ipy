@@ -1,0 +1,28 @@
+import tensorflow as tf
+from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input, decode_predictions
+import numpy as np
+from PIL import Image
+
+# 加载预训练模型
+model = MobileNetV2(weights='imagenet')
+
+def detect_cat(image_path, threshold=0.1):
+    # 加载并预处理图像
+    img = Image.open(image_path).resize((224, 224))
+    x = np.array(img)
+    x = preprocess_input(x[np.newaxis, ...])
+    
+    # 预测
+    preds = model.predict(x)
+    decoded = decode_predictions(preds, top=5)[0]
+    
+    # 检查是否为猫
+    cat_labels = ['tabby', 'tiger_cat', 'Persian_cat', 'Egyptian_cat']
+    for _, label, prob in decoded:
+        if label in cat_labels and prob > threshold:
+            return True, f"检测到猫（{label}，置信度：{prob:.2f}）"
+    return False, "未检测到猫"
+
+# 示例使用
+result, detail = detect_cat("/home/anxixu/MATLAB/cat.jpg")
+print(detail)
